@@ -1,0 +1,6 @@
+HTTP:
+python -m SimpleHTTPServer 80
+
+HTTPS:
+openssl req -x509 -nodes -days 365 -newkey rsa:4096 -keyout /tmp/microsoft.key -out /tmp/microsoft.pem -subj "/C=US/ST=Washington/L=Redmond/O=Microsoft Corporation/OU=Microsoft IT/CN=192.168.3.136"
+python -c "import BaseHTTPServer,SimpleHTTPServer;import ssl;bindadd='0.0.0.0';srvprt=443;sslkey='/tmp/microsoft.key';sslcrt='/tmp/microsoft.pem';httpd=BaseHTTPServer.HTTPServer((bindadd,srvprt),SimpleHTTPServer.SimpleHTTPRequestHandler);httpd.socket=ssl.wrap_socket (httpd.socket,server_side=True,keyfile=sslkey,certfile=sslcrt);httpd.serve_forever();"
